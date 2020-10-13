@@ -1,12 +1,12 @@
 package myCompile;
 
 public class TestProgram {
-	/** ÓÃÓÚ²âÊÔ´Ê·¨·ÖÎöÆ÷ */
+	/** ç”¨äºŽæµ‹è¯•è¯æ³•åˆ†æžå™¨ */
 	public static void main(String[] args) {
-		theCompiler compiler = new theCompiler();
-		// ²âÊÔÓï¾ä
+		LexicalAnalysis compiler = new LexicalAnalysis();
+		// æµ‹è¯•è¯­å¥
 		String sentence = "if == i>==<=<++-+13: int c = 1; else: b = 3*6+8";
-        System.out.println("\nÓï¾ä: " + sentence);
+        System.out.println("\nè¯­å¥: " + sentence);
         TokenReader tokenReader = compiler.tokenize(sentence);
         compiler.printAll(tokenReader);
         System.out.println("------------------------");
