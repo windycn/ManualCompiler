@@ -6,38 +6,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ´Ê·¨·ÖÎöÆ÷
- * Êä³öToken´®
- * @author ÍõêÊ
+ * è¯æ³•åˆ†æå™¨
+ * è¾“å‡ºTokenä¸²
+ * @author ç‹æ™”
  */
-public class theCompiler {
-	/** ¶¨Òå´Ê·¨·ÖÎöÊ¹ÓÃµÄ±äÁ¿ */
-	// ÁÙÊ±±£´æTokenÎÄ±¾
+public class LexicalAnalysis {
+	/** å®šä¹‰è¯æ³•åˆ†æä½¿ç”¨çš„å˜é‡ */
+	// ä¸´æ—¶ä¿å­˜Tokenæ–‡æœ¬
 	private StringBuffer tokenText = null;
-	// ±£´æ½âÎöºóµÄToken
+	// ä¿å­˜è§£æåçš„Token
 	private List<Token> tokens = null;
-	// ±£´æµ±Ç°ÕıÔÚ½âÎöµÄToken
+	// ä¿å­˜å½“å‰æ­£åœ¨è§£æçš„Token
 	private Token token = null;
 	
-	/** ¶¨Òå±ã½İµÄÅĞ¶Ï·½·¨£¬¼õÉÙ´úÂëÈßÓà */
-	//ÊÇ·ñÊÇ×ÖÄ¸
+	/** å®šä¹‰ä¾¿æ·çš„åˆ¤æ–­æ–¹æ³•ï¼Œå‡å°‘ä»£ç å†—ä½™ */
+	//æ˜¯å¦æ˜¯å­—æ¯
     private boolean isAlpha(int ch) {
         return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z';
     }
-    //ÊÇ·ñÊÇÊı×Ö
+    //æ˜¯å¦æ˜¯æ•°å­—
     private boolean isDigit(int ch) {
         return ch >= '0' && ch <= '9';
     }
-    //ÊÇ·ñÊÇ¿Õ°××Ö·û
+    //æ˜¯å¦æ˜¯ç©ºç™½å­—ç¬¦
     private boolean isBlank(int ch) {
         return ch == ' ' || ch == '\t' || ch == '\n';
     }
 	
     /**
-     * ´´½¨ÓĞÏŞ×Ô¶¯»ú£¬²¢½øÈë³õÊ¼×´Ì¬
-     * ½øÈë³õÊ¼×´Ì¬ºó»áÂíÉÏ½øÈëÆäËû×´Ì¬¡£
-     * ¿ªÊ¼½âÎöµÄÊ±ºò£¬½øÈë³õÊ¼×´Ì¬£»
-     * Ä³¸öToken½âÎöÍê±Ï£¬Ò²½øÈë³õÊ¼×´Ì¬£¬ÔÚÕâÀï°ÑToken¼ÇÏÂÀ´£¬È»ºó½¨Á¢Ò»¸öĞÂµÄToken¡£
+     * åˆ›å»ºæœ‰é™è‡ªåŠ¨æœºï¼Œå¹¶è¿›å…¥åˆå§‹çŠ¶æ€
+     * è¿›å…¥åˆå§‹çŠ¶æ€åä¼šé©¬ä¸Šè¿›å…¥å…¶ä»–çŠ¶æ€ã€‚
+     * å¼€å§‹è§£æçš„æ—¶å€™ï¼Œè¿›å…¥åˆå§‹çŠ¶æ€ï¼›
+     * æŸä¸ªTokenè§£æå®Œæ¯•ï¼Œä¹Ÿè¿›å…¥åˆå§‹çŠ¶æ€ï¼Œåœ¨è¿™é‡ŒæŠŠTokenè®°ä¸‹æ¥ï¼Œç„¶åå»ºç«‹ä¸€ä¸ªæ–°çš„Tokenã€‚
      * @param ch
      * @return
      */
@@ -51,27 +51,27 @@ public class theCompiler {
         }
 
         DfaState newState = DfaState.Initial;
-        // ½øÈë×ÖÄ¸Æ¥Åä×´Ì¬
+        // è¿›å…¥å­—æ¯åŒ¹é…çŠ¶æ€
         if (isAlpha(ch)) {
             if (ch == 'i') {
-            	// Èç¹û×Ö·ûÎªi£¬Ôò½øÈëint/if¹Ø¼ü×ÖµÄÆ¥Åä
+            	// å¦‚æœå­—ç¬¦ä¸ºiï¼Œåˆ™è¿›å…¥int/ifå…³é”®å­—çš„åŒ¹é…
                 newState = DfaState.Id_int1_if1;
             } else if (ch == 'e') {
-            	// Èç¹û×Ö·ûÎªe£¬Ôò½øÈëelse¹Ø¼ü×ÖµÄÆ¥Åä
+            	// å¦‚æœå­—ç¬¦ä¸ºeï¼Œåˆ™è¿›å…¥elseå…³é”®å­—çš„åŒ¹é…
             	newState = DfaState.Id_else1;
             } else {
-                newState = DfaState.Id; //½øÈëId×´Ì¬
+                newState = DfaState.Id; //è¿›å…¥IdçŠ¶æ€
             }
             token.type = Token.TokenType.Identifier;
             tokenText.append(ch);
         } 
-        // ½øÈëÊı×ÖÆ¥Åä×´Ì¬
+        // è¿›å…¥æ•°å­—åŒ¹é…çŠ¶æ€
         else if (isDigit(ch)) { 
             newState = DfaState.IntLiteral;
             token.type = Token.TokenType.IntLiteral;
             tokenText.append(ch);
         }
-        // ÒÀ´Î½øÈë·ûºÅÆ¥Åä
+        // ä¾æ¬¡è¿›å…¥ç¬¦å·åŒ¹é…
         else if (ch == '>') {
             newState = DfaState.GT;
             token.type = Token.TokenType.GT;
@@ -117,67 +117,67 @@ public class theCompiler {
             token.type = Token.TokenType.Assignment;
             tokenText.append(ch);
         } else {
-        	 // Ìø¹ıËùÓĞÎ´Öª²¿·Ö
+        	 // è·³è¿‡æ‰€æœ‰æœªçŸ¥éƒ¨åˆ†
             newState = DfaState.Initial;
         }
         return newState;
     }
     
     /**
-     * ½âÎö×Ö·û´®£¬ĞÎ³ÉToken¡£
-     * ÕâÊÇÒ»¸öÓĞÏŞ×´Ì¬×Ô¶¯»ú£¬ÔÚ²»Í¬µÄ×´Ì¬ÖĞÇ¨ÒÆ¡£
+     * è§£æå­—ç¬¦ä¸²ï¼Œå½¢æˆTokenã€‚
+     * è¿™æ˜¯ä¸€ä¸ªæœ‰é™çŠ¶æ€è‡ªåŠ¨æœºï¼Œåœ¨ä¸åŒçš„çŠ¶æ€ä¸­è¿ç§»ã€‚
      * @param code
      * @return
      */
     public TokenReader tokenize(String code) {
         tokens = new ArrayList<Token>();
-        // toCharArray()·½·¨½«×Ö·û´®×ª»»Îª×Ö·ûÊı×é
-        // CharArrayReaderÀàÊµÏÖÒ»¸ö¿ÉÓÃ×÷×Ö·ûÊäÈëÁ÷µÄ×Ö·û»º³åÇø
+        // toCharArray()æ–¹æ³•å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºå­—ç¬¦æ•°ç»„
+        // CharArrayReaderç±»å®ç°ä¸€ä¸ªå¯ç”¨ä½œå­—ç¬¦è¾“å…¥æµçš„å­—ç¬¦ç¼“å†²åŒº
         CharArrayReader reader = new CharArrayReader(code.toCharArray());
         tokenText = new StringBuffer();
         token = new Token();
         int ich = 0;
         char ch = 0;
-        // ³õÊ¼»¯ÓĞÏŞ×Ô¶¯»ú×´Ì¬
+        // åˆå§‹åŒ–æœ‰é™è‡ªåŠ¨æœºçŠ¶æ€
         DfaState state = DfaState.Initial;
         try {
-        	// java.io.CharArrayReader.read()ÓÃÓÚ¶ÁÈ¡µ¥¸ö×Ö·û
-        	// ·µ»ØÖµÎªÕûÊı£¬±íÊ¾¶ÁÈ¡µÄ×Ö·û£¬Èç¹ûÁ÷½áÊø£¬Ôò·µ»Ø-1
+        	// java.io.CharArrayReader.read()ç”¨äºè¯»å–å•ä¸ªå­—ç¬¦
+        	// è¿”å›å€¼ä¸ºæ•´æ•°ï¼Œè¡¨ç¤ºè¯»å–çš„å­—ç¬¦ï¼Œå¦‚æœæµç»“æŸï¼Œåˆ™è¿”å›-1
             while ((ich = reader.read()) != -1) {
-            	// Ç¿ÖÆÀàĞÍ×ª»»Îª×Ö·ûÀàĞÍ
+            	// å¼ºåˆ¶ç±»å‹è½¬æ¢ä¸ºå­—ç¬¦ç±»å‹
                 ch = (char) ich;
                 switch (state) {
-                // ÖØĞÂÈ·¶¨³õÊ¼×´Ì¬
+                // é‡æ–°ç¡®å®šåˆå§‹çŠ¶æ€
                 case Initial:
                     state = initToken(ch);
                     break;
-                // ±êÊ¶·ûÊ¶±ğ×´Ì¬
+                // æ ‡è¯†ç¬¦è¯†åˆ«çŠ¶æ€
                 case Id:
                     if (isAlpha(ch) || isDigit(ch)) {
-                    	//±£³Ö±êÊ¶·û×´Ì¬
+                    	//ä¿æŒæ ‡è¯†ç¬¦çŠ¶æ€
                         tokenText.append(ch);       
                     } else {
-                    	//ÍË³ö±êÊ¶·û×´Ì¬£¬²¢±£´æToken
+                    	//é€€å‡ºæ ‡è¯†ç¬¦çŠ¶æ€ï¼Œå¹¶ä¿å­˜Token
                         state = initToken(ch);      
                     }
                     break;
-                // >/>=Ê¶±ğ×´Ì¬
+                // >/>=è¯†åˆ«çŠ¶æ€
                 case GT:
-                	// Æ¥ÅäÊÇ·ñÎªGE(>=)×´Ì¬
+                	// åŒ¹é…æ˜¯å¦ä¸ºGE(>=)çŠ¶æ€
                     if (ch == '=') {
-                    	// ÇĞ»»×´Ì¬ÎªGE
+                    	// åˆ‡æ¢çŠ¶æ€ä¸ºGE
                         token.type = Token.TokenType.GE;
                         state = DfaState.GE;
                         tokenText.append(ch);
                     } else {
-                    	 // ÍË³öGT(>)×´Ì¬£¬²¢±£´æToken
+                    	 // é€€å‡ºGT(>)çŠ¶æ€ï¼Œå¹¶ä¿å­˜Token
                         state = initToken(ch);   
                     }
                     break;
                 case GE:
                 	state = initToken(ch);
                 	break;
-                // </<=Ê¶±ğ×´Ì¬
+                // </<=è¯†åˆ«çŠ¶æ€
                 case LT:
                 	if (ch == '=') {
                         token.type = Token.TokenType.LE;
@@ -190,20 +190,20 @@ public class theCompiler {
                 case LE:
                 	state = initToken(ch);
                 	break;
-                // =/==Ê¶±ğ×´Ì¬
+                // =/==è¯†åˆ«çŠ¶æ€
                 case Assignment:
                 	if (ch == '=') {
-                        token.type = Token.TokenType.EQ;  //×ª»»³ÉEQ
+                        token.type = Token.TokenType.EQ;  //è½¬æ¢æˆEQ
                         state = DfaState.EQ;
                         tokenText.append(ch);
                     } else {
-                        state = initToken(ch);      //ÍË³öAssignment×´Ì¬£¬²¢±£´æToken
+                        state = initToken(ch);      //é€€å‡ºAssignmentçŠ¶æ€ï¼Œå¹¶ä¿å­˜Token
                     }
                 	break;
                 case EQ:
                 	state = initToken(ch);
                 	break;
-                // ÆäËû·ûºÅÊ¶±ğ×´Ì¬
+                // å…¶ä»–ç¬¦å·è¯†åˆ«çŠ¶æ€
                 case Plus:
                 case Minus:
                 case Star:
@@ -214,17 +214,17 @@ public class theCompiler {
                 case RightParen:
                     state = initToken(ch); 
                     break;
-                // Êı×Ö×ÖÃæÁ¿Ê¶±ğ×´Ì¬
+                // æ•°å­—å­—é¢é‡è¯†åˆ«çŠ¶æ€
                 case IntLiteral:
                     if (isDigit(ch)) {
-                    	// ±£³ÖÊ¶±ğ×´Ì¬
+                    	// ä¿æŒè¯†åˆ«çŠ¶æ€
                         tokenText.append(ch);
                     } else {
-                    	// ÍË³öµ±Ç°×´Ì¬£¬²¢±£´æToken
+                    	// é€€å‡ºå½“å‰çŠ¶æ€ï¼Œå¹¶ä¿å­˜Token
                         state = initToken(ch);      
                     }
                     break;
-                // ifºÍint¹Ø¼ü×Ö¹²ÓÃµÄÊ¶±ğ×´Ì¬
+                // ifå’Œintå…³é”®å­—å…±ç”¨çš„è¯†åˆ«çŠ¶æ€
                 case Id_int1_if1:
                     if (ch == 'n') {
                         state = DfaState.Id_int2;
@@ -235,21 +235,21 @@ public class theCompiler {
                     	tokenText.append(ch);
                     }
                     else if (isDigit(ch) || isAlpha(ch)){
-                        state = DfaState.Id;    //ÇĞ»»»ØId×´Ì¬
+                        state = DfaState.Id;    //åˆ‡æ¢å›IdçŠ¶æ€
                         tokenText.append(ch);
                     }
                     else {
                         state = initToken(ch);
                     }
                     break;
-                // int¹Ø¼ü×ÖÊ¶±ğ×´Ì¬
+                // intå…³é”®å­—è¯†åˆ«çŠ¶æ€
                 case Id_int2:
                     if (ch == 't') {
                         state = DfaState.Id_int3;
                         tokenText.append(ch);
                     }
                     else if (isDigit(ch) || isAlpha(ch)){
-                        state = DfaState.Id;    //ÇĞ»»»Øid×´Ì¬
+                        state = DfaState.Id;    //åˆ‡æ¢å›idçŠ¶æ€
                         tokenText.append(ch);
                     }
                     else {
@@ -262,22 +262,22 @@ public class theCompiler {
                         state = initToken(ch);
                     }
                     else{
-                        state = DfaState.Id;    //ÇĞ»»»ØId×´Ì¬
+                        state = DfaState.Id;    //åˆ‡æ¢å›IdçŠ¶æ€
                         tokenText.append(ch);
                     }
                     break;
-                // if¹Ø¼ü×ÖÊ¶±ğ×´Ì¬
+                // ifå…³é”®å­—è¯†åˆ«çŠ¶æ€
                 case Id_if2:
                 	if (isBlank(ch)) {
                         token.type = Token.TokenType.If;
                         state = initToken(ch);
                     }
                     else{
-                        state = DfaState.Id;    //ÇĞ»»»ØId×´Ì¬
+                        state = DfaState.Id;    //åˆ‡æ¢å›IdçŠ¶æ€
                         tokenText.append(ch);
                     }
                     break;
-                // else¹Ø¼ü×ÖÊ¶±ğ×´Ì¬
+                // elseå…³é”®å­—è¯†åˆ«çŠ¶æ€
                 case Id_else1:
                 	if (ch == 'l') {
                         state = DfaState.Id_else2;
@@ -326,17 +326,17 @@ public class theCompiler {
                     	state = initToken(ch);
                     	state = DfaState.Colon; 
                     } else{
-                        state = DfaState.Id;    //ÇĞ»»»ØId×´Ì¬
+                        state = DfaState.Id;    //åˆ‡æ¢å›IdçŠ¶æ€
                         tokenText.append(ch);
                     }
                     break;
-                // È±Ê¡×´Ì¬
+                // ç¼ºçœçŠ¶æ€
                 default:
 
                 }
 
             }
-            // °Ñ×îºóÒ»¸ötokenËÍ½øÈ¥
+            // æŠŠæœ€åä¸€ä¸ªtokené€è¿›å»
             if (tokenText.length() > 0) {
                 initToken(ch);
             }
@@ -348,20 +348,20 @@ public class theCompiler {
     }
     
     /**
-     * ´òÓ¡ËùÓĞµÄToken
+     * æ‰“å°æ‰€æœ‰çš„Token
      * @param tokenReader
      */
     public void printAll(TokenReader tokenReader){
-        System.out.println("Token\t\tÀàĞÍ");
+        System.out.println("Token\t\tç±»å‹");
         Token token = null;
-        // Êä³öToken¼°ÀàĞÍ
+        // è¾“å‡ºTokenåŠç±»å‹
         while ((token= tokenReader.read())!=null){
             System.out.println(token.getText()+"\t\t"+token.getType());
         }
     }
     
     /**
-     * ÓÃÃ¶¾ÙÀàĞÍ¶¨ÒåÓĞÏŞ×´Ì¬»úµÄ¸÷ÖÖ×´Ì¬¡£
+     * ç”¨æšä¸¾ç±»å‹å®šä¹‰æœ‰é™çŠ¶æ€æœºçš„å„ç§çŠ¶æ€ã€‚
      */
     private enum DfaState {
         Initial,
